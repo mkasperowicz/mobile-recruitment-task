@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "wdio": "wdio run ./wdio.conf.ts"
+    "wdio": "wdio run ./wdio.conf.ts",
+    "debug:android": "npx wdio wdio.android.conf.ts --spec ./test/specs/debug.e2e.ts",
+    "debug:ios": "npx wdio wdio.ios.conf.ts --spec ./test/specs/debug.e2e.ts"
   },
   "keywords": [],
   "author": "",
