@@ -19,6 +19,34 @@ class ProductsPage extends BasePage {
 			throw new Error(`There is no ADD TO CART button for: ${productName}`);
 		}
 	}
+
+	async goToCart() {
+		if (driver.isIOS) {
+			const cartButton = await $('~test-Cart');
+			const location = await cartButton.getLocation();
+			const size = await cartButton.getSize();
+
+			const targetX = location.x + size.width / 2;
+			const targetY = location.y + size.height - 1;
+
+			await driver.performActions([
+				{
+					type: 'pointer',
+					id: 'finger1',
+					parameters: { pointerType: 'touch' },
+					actions: [
+						{ type: 'pointerMove', duration: 0, x: targetX, y: targetY },
+						{ type: 'pointerDown', button: 0 },
+						{ type: 'pause', duration: 100 },
+						{ type: 'pointerUp', button: 0 },
+					],
+				},
+			]);
+		} else {
+			const cartButton = await $('//*[@content-desc="test-Cart"]');
+			await cartButton.click();
+		}
+	}
 }
 
 export default new ProductsPage();
