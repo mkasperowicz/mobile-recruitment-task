@@ -5,8 +5,11 @@ class ProductsPage extends BasePage {
 		const isIOS = driver.isIOS;
 
 		const addToCartButtonXPath = isIOS
-			? `//XCUIElementTypeOther[./XCUIElementTypeStaticText[@name="test-Item title" and @label="${productName}"]]/following-sibling::XCUIElementTypeOther//XCUIElementTypeOther[@name="test-ADD TO CART"]`
-			: `//*[@text="${productName}" or @name="${productName}"]/following-sibling::*[@content-desc="test-ADD TO CART"]`;
+			? `//XCUIElementTypeOther[
+        ./XCUIElementTypeStaticText[@name="test-Item title" and @label="${productName}"]
+        ]/following-sibling::XCUIElementTypeOther//XCUIElementTypeOther[@name="test-ADD TO CART"]`
+			: `//*[@text="${productName}" or @name="${productName}"]
+        /following-sibling::*[@content-desc="test-ADD TO CART"]`;
 
 		const addToCartButton = await $(addToCartButtonXPath);
 
