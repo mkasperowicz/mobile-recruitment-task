@@ -4,3 +4,4 @@ dist/
 .DS_Store
 apps/
 .vscode
+test/specs/debug.e2e.ts
