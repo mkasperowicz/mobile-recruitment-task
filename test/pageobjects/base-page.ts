@@ -1,5 +1,10 @@
 export default class BasePage {
-	async waitForElementDisplayed(selector: string, timeout: number = 5000): Promise<void> {
+	// Needed for validating if the total price on the confirmation screen is the same as value of added products
+	static totalPrice: number = 0;
+	//Needed for scrolling issues in the cart
+	static cartProducts: string[] = [];
+
+	async waitForElementDisplayed(selector: string, timeout: number = 3000): Promise<void> {
 		const element = await $(selector);
 		await element.waitForDisplayed({ timeout });
 	}

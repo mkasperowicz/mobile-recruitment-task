@@ -1,23 +1,39 @@
 import BasePage from './base-page';
+import ProductPage from './product-page';
 
 class ProductsPage extends BasePage {
-	async addProductToCart(productName: string) {
-		const isIOS = driver.isIOS;
-
-		const addToCartButtonXPath = isIOS
+	async openProduct(productName: string): Promise<typeof ProductPage> {
+		const productSelector = driver.isIOS
 			? `//XCUIElementTypeOther[
-        ./XCUIElementTypeStaticText[@name="test-Item title" and @label="${productName}"]
-        ]/following-sibling::XCUIElementTypeOther//XCUIElementTypeOther[@name="test-ADD TO CART"]`
-			: `//*[@text="${productName}" or @name="${productName}"]
-        /following-sibling::*[@content-desc="test-ADD TO CART"]`;
+				XCUIElementTypeStaticText[
+						@name="test-Item title" 
+						and contains(@label, "${productName}")
+					]
+				]`
+			: `//*[@text="${productName}" or @name="${productName}"]`;
+		const productElement = await $(productSelector);
+		await productElement.scrollIntoView();
+		await productElement.click();
 
-		const addToCartButton = await $(addToCartButtonXPath);
+		const backToProductsSelector = driver.isIOS
+			? '~test-BACK TO PRODUCTS'
+			: '//*[@content-desc="test-BACK TO PRODUCTS"]';
 
-		if (await addToCartButton.isDisplayed()) {
-			await addToCartButton.click();
-		} else {
-			throw new Error(`There is no ADD TO CART button for: ${productName}`);
-		}
+		await this.waitForElementDisplayed(backToProductsSelector);
+
+		return ProductPage;
+	}
+
+	async addProductToCart(productName: string): Promise<void> {
+		const productPage = await this.openProduct(productName);
+		const price = await productPage.getProductPrice();
+		await productPage.addToCart();
+
+		BasePage.cartProducts.push(productName);
+		BasePage.totalPrice += price;
+		console.log(`Added ${productName}: +${price} => Total: ${BasePage.totalPrice}`);
+
+		await productPage.goBackToProducts();
 	}
 
 	async goToCart() {
