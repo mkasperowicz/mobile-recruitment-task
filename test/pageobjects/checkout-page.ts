@@ -8,9 +8,6 @@ class CheckoutPage extends BasePage {
 			driver.isIOS ? '~test-Zip/Postal Code' : '//*[@content-desc="test-Zip/Postal Code"]',
 			postalCode,
 		);
-	}
-
-	async continueCheckout(): Promise<void> {
 		const continueButton = await $(driver.isIOS ? '~test-CONTINUE' : '//*[@content-desc="test-CONTINUE"]');
 		await continueButton.click();
 	}
@@ -23,9 +20,7 @@ class CheckoutPage extends BasePage {
 		let totalValueElement = await $(totalValueSelector);
 		const isTotalValueVisible = await totalValueElement.isDisplayed().catch(() => false);
 
-		if (!isTotalValueVisible) {
-			await totalValueElement.scrollIntoView();
-		}
+		await this.nativeScrollTo(totalValueSelector);
 
 		const totalValueText = await totalValueElement.getText();
 		const totalValue = parseFloat(totalValueText.replace(/[^0-9.]/g, ''));
@@ -34,6 +29,28 @@ class CheckoutPage extends BasePage {
 		console.log(`Calculated Base Total: ${BasePage.totalPrice}`);
 
 		return totalValue === BasePage.totalPrice;
+	}
+
+	async isProductInCheckout(productName: string): Promise<boolean> {
+		if (driver.isIOS) {
+			const checkoutContainerSelector = '(//XCUIElementTypeOther[@name[contains(., "CHECKOUT: OVERVIEW")]])[2]';
+			const checkoutContainer = await $(checkoutContainerSelector);
+
+			const productSelector = `.//XCUIElementTypeStaticText[@name="${productName}"]`;
+
+			const productElements = await checkoutContainer.$$(productSelector);
+			return (await productElements.length) > 0;
+		} else {
+			const productSelector = `//android.view.ViewGroup[@content-desc="test-Item"]
+        [.//android.widget.TextView[@text="${productName}"]]`;
+
+			if (await $(productSelector).isDisplayed()) return true;
+
+			await this.nativeScrollTo(productSelector);
+			return await $(productSelector)
+				.waitForDisplayed({ timeout: 2000, interval: 200 })
+				.catch(() => false);
+		}
 	}
 
 	async finishCheckout(): Promise<void> {

@@ -1,14 +1,6 @@
 import BasePage from './base-page';
 
 class CartPage extends BasePage {
-	async isProductInCart(productName: string): Promise<boolean> {
-		const productSelector = driver.isIOS
-			? `//XCUIElementTypeStaticText[@name="${productName}"]`
-			: `//*[@content-desc="${productName}"]`;
-
-		return await $(productSelector).isDisplayed();
-	}
-
 	async removeProductFromCart(productName: string): Promise<void> {
 		const productSelector = driver.isIOS
 			? `//XCUIElementTypeOther[
@@ -37,7 +29,7 @@ class CartPage extends BasePage {
 		if (driver.isAndroid) {
 			const isRemoveVisible = await removeButton.isDisplayed().catch(() => false);
 			if (!isRemoveVisible) {
-				await this.scrollToNextProduct(productName);
+				await this.nativeScrollTo(removeButtonSelector);
 			}
 		}
 
@@ -51,26 +43,10 @@ class CartPage extends BasePage {
 		await removeButton.click();
 	}
 
-	async scrollToNextProduct(currentProduct: string): Promise<void> {
-		const currentIndex = BasePage.cartProducts.indexOf(currentProduct);
-
-		if (currentIndex < BasePage.cartProducts.length - 1) {
-			const nextProduct = BasePage.cartProducts[currentIndex + 1];
-
-			const nextProductSelector = `//android.view.ViewGroup[@content-desc="test-Item"]
-      [.//android.widget.TextView[@text="${nextProduct}"]]`;
-			const nextProductElement = await $(nextProductSelector);
-
-			await nextProductElement.scrollIntoView();
-		} else {
-			const checkoutButton = await $('//*[@content-desc="test-CHECKOUT"]');
-			await checkoutButton.scrollIntoView();
-		}
-	}
-
 	async proceedToCheckout(): Promise<void> {
 		const checkoutButtonSelector = driver.isIOS ? '~test-CHECKOUT' : '//*[@content-desc="test-CHECKOUT"]';
 
+		await this.nativeScrollTo(checkoutButtonSelector);
 		const button = await $(checkoutButtonSelector);
 		await button.click();
 	}
