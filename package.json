@@ -1,13 +1,14 @@
 {
-  "name": "in-post-recritment-task",
+  "name": "mobile-recruitment-task",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "wdio": "wdio run ./wdio.conf.ts",
-    "debug:android": "npx wdio wdio.android.conf.ts --spec ./test/specs/debug.e2e.ts",
-    "debug:ios": "npx wdio wdio.ios.conf.ts --spec ./test/specs/debug.e2e.ts"
+    "test:android": "npx wdio wdio.android.conf.ts",
+    "test:ios": "npx wdio wdio.ios.conf.ts",
+    "test:all": "npm run test:android && npm run test:ios"
   },
   "keywords": [],
   "author": "",

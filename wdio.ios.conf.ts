@@ -6,10 +6,10 @@ export const config: WebdriverIO.Config = {
 	capabilities: [
 		{
 			platformName: 'iOS',
-			'appium:deviceName': 'iPhone 15',
-			'appium:platformVersion': '18.2',
+			'appium:deviceName': process.env.DEVICE_NAME || 'iPhone 15',
+			'appium:platformVersion': process.env.PLATFORM_VERSION || '18.2',
 			'appium:automationName': 'XCUITest',
-			'appium:app': './apps/SauceLabs-Demo-iOS.app',
+			'appium:app': process.env.APP_PATH || './apps/SauceLabs-Demo-iOS.app',
 			'appium:autoAcceptAlerts': true,
 			'appium:noReset': false,
 		},
