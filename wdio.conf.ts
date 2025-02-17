@@ -10,7 +10,7 @@ export const config: WebdriverIO.Config = {
 	specs: ['./test/specs/**/*.ts'],
 	exclude: [],
 
-	maxInstances: 10,
+	maxInstances: 1,
 
 	logLevel: 'info',
 	bail: 0,

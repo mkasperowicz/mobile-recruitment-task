@@ -61,6 +61,9 @@ class ProductsPage extends BasePage {
 		} else {
 			const cartButton = await $('//*[@content-desc="test-Cart"]');
 			await cartButton.click();
+
+			const cartHeaderSelector = driver.isIOS ? '~test-YOUR CART' : '//android.widget.TextView[@text="YOUR CART"]';
+			await this.waitForElementDisplayed(cartHeaderSelector);
 		}
 	}
 }
