@@ -2,6 +2,7 @@ node_modules
 package-lock.json
 dist/
 .DS_Store
-apps/
+/apps/*
+!/apps/.gitkeep
 .vscode
 test/specs/debug.e2e.ts
